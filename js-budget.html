@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" />
+
+    <style>
+      /* This is main CSS */
+      :root {
+        --mainWhite: #f5f5f5f5;
+        --mainDark: #333333;
+        --mainGreen: #317b22;
+        --mainRed: #b80c09;
+        --mainBlue: #05668d;
+      }
+
+      body {
+        background: var(--mainWhite);
+        color: var(--mainDark);
+      }
+      .budget-feedback,
+      .expense-feedback {
+        display: none;
+      }
+
+      .budget-form {
+        border: 0.15rem solid var(--mainGreen);
+        padding: 1rem;
+        border-radius: 0.25rem;
+      }
+      .expense-form {
+        border: 0.15rem solid var(--mainRed);
+        padding: 1rem;
+        border-radius: 0.25rem;
+      }
+      .budget-submit {
+        background: transparent;
+        border: 0.1rem solid var(--mainGreen);
+        color: var(--mainGreen);
+      }
+      .expense-submit {
+        background: transparent;
+        border: 0.1rem solid var(--mainRed);
+        color: var(--mainRed);
+      }
+      .expense-submit:hover {
+        background: var(--mainRed);
+        color: var(--mainWhite);
+      }
+      .budget-submit:hover {
+        background: var(--mainGreen);
+        color: var(--mainDark);
+      }
+
+      .budget-input {
+        border: 0.05rem solid var(--mainGreen) !important;
+      }
+      .expense-input {
+        border: 0.05rem solid var(--mainRed) !important;
+      }
+      .expense-amount,
+      .expense-title {
+        color: var(--mainRed);
+      }
+      .edit-icon {
+        color: var(--mainBlue);
+        cursor: pointer;
+        font-size: 1rem;
+        text-decoration: none !important;
+      }
+      .delete-icon {
+        color: var(--mainRed);
+        cursor: pointer;
+        font-size: 1rem;
+        text-decoration: none !important;
+      }
+      .edit-icon:hover {
+        color: var(--mainBlue);
+      }
+      .delete-icon:hover {
+        color: var(--mainRed);
+      }
+      .showItem {
+        display: block;
+      }
+      .info-title {
+        font-size: 1.5rem;
+      }
+      .budget {
+        font-size: 1.6rem;
+        color: var(--mainGreen);
+      }
+      .expense {
+        font-size: 1.6rem;
+        color: var(--mainRed);
+      }
+      .balance {
+        font-size: 1.6rem;
+      }
+      .budget-icon,
+      .expense-icon,
+      .balance-icon {
+        font-size: 2.5rem;
+        color: var(--mainBlue);
+      }
+      .showRed {
+        color: var(--mainRed);
+      }
+      .showGreen {
+        color: var(--mainGreen);
+      }
+      .showBlack {
+        color: var(--mainDark);
+      }
+      @media screen and (min-width: 992px) {
+        .budget {
+          font-size: 2.6rem;
+          color: var(--mainGreen);
+        }
+        .expense {
+          font-size: 2.6rem;
+          color: var(--mainRed);
+        }
+        .balance {
+          font-size: 2.6rem;
+        }
+        .budget-icon,
+        .expense-icon,
+        .balance-icon {
+          font-size: 3.5rem;
+          color: var(--mainBlue);
+        }
+      }
+      .list-item {
+        flex: 0 0 33.33%;
+        text-align: center;
+      }
+      .expense-item {
+        height: 2rem;
+        display: inline-flex;
+        width: 50%;
+        margin: auto;
+      }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  </head>
+  <body class="bg-light">
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-11 mx-auto pt-3">
+      <!-- title -->
+      <h3 class="text-uppercase mb-4">budget app</h3>
+      <div class="row">
+       <div class="col-md-5 my-3">
+        <!-- budget feedback -->
+        <div class="budget-feedback alert alert-danger text-capitalize">budget feedback</div>
+        <!-- budget form -->
+        <form id="budget-form" class=" budget-form">
+         <h5 class="text-capitalize">please enter your budget</h5>
+         <div class="form-group">
+          <input type="number" class="form-control budget-input" id="budget-input">
+         </div>
+         <!-- submit button -->
+         <button type="submit" class="btn text-capitalize budget-submit" id="budget-submit">calculate</button>
+        </form>
+       </div>
+       <div class="col-md-7">
+        <!-- app info -->
+        <div class="row my-3">
+         <div class="col-4 text-center mb-2">
+          <h6 class="text-uppercase info-title">budget</h6>
+          <span class="budget-icon"><i class="fas fa-money-bill-alt"></i></span>
+          <h4 class="text-uppercase mt-2 budget" id="budget"><span>$ </span><span id="budget-amount">0</span></h4>
+         </div>
+         <div class="col-4 text-center">
+          <h6 class="text-uppercase info-title">expenses</h6>
+          <span class="expense-icon"><i class="far fa-credit-card"></i></span>
+          <h4 class="text-uppercase mt-2 expense" id="expense"><span>$ </span><span id="expense-amount">0</span></h4>
+         </div>
+         <div class="col-4 text-center">
+          <h6 class="text-uppercase info-title">balance</h6>
+          <span class="balance-icon"><i class="fas fa-dollar-sign"></i></span>
+          <h4 class="text-uppercase mt-2 balance" id="balance"> <span>$ </span><span id="balance-amount">0</span></h4>
+         </div>
+        </div>
+       </div>
+      </div>
+
+      <div class="row">
+       <div class="col-md-5 my-3">
+        <!-- expense feedback -->
+        <div class="expense-feedback alert alert-danger text-capitalize">expense feedback</div>
+        <!-- expense form -->
+        <form id="expense-form" class=" expense-form">
+         <h5 class="text-capitalize">please enter your expense</h5>
+         <div class="form-group">
+          <input type="text" class="form-control expense-input" id="expense-input">
+         </div>
+         <h5 class="text-capitalize">please enter expense amount</h5>
+         <div class="form-group">
+          <input type="number" class="form-control expense-input" id="amount-input">
+         </div>
+         <!-- submit button -->
+         <button type="submit" class="btn text-capitalize expense-submit" id="expense-submit">add expense</button>
+        </form>
+       </div>
+       <div class="col-md-7 my-3">
+        <!-- expense list -->
+        <div class="expense-list" id="expense-list">
+
+         <div class="expense-list__info d-flex justify-content-between text-capitalize">
+          <h5 class="list-item">expense title</h5>
+          <h5 class="list-item">expense value</h5>
+          <h5 class="list-item"></h5>
+         </div>
+         <!-- single expense -->
+         <!-- <div class="expense">
+          <div class="expense-item d-flex justify-content-between align-items-baseline">
+           <h6 class="expense-title mb-0 text-uppercase list-item">- title</h6>
+           <h5 class="expense-amount mb-0 list-item">amount</h5>
+           <div class="expense-icons list-item">
+            <a href="#" class="edit-icon mx-2" data-id="${expense.id}">
+             <i class="fas fa-edit"></i>
+            </a>
+            <a href="#" class="delete-icon" data-id="${expense.id}">
+             <i class="fas fa-trash"></i>
+            </a>
+           </div>
+          </div>
+         </div> -->
+         <!-- end of single expense -->
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+   <script> 
+    // This file is: app.js
+    class UI {
+      constructor() {
+        this.budgetFeedback = document.querySelector(".budget-feedback");
+        this.expenseFeedback = document.querySelector(".expense-feedback");
+        this.budgetForm = document.getElementById("budget-form");
+        this.budgetInput = document.getElementById("budget-input");
+        this.budgetAmount = document.getElementById("budget-amount");
+        this.expenseAmount = document.getElementById("expense-amount");
+        this.balance = document.getElementById("balance");
+        this.balanceAmount = document.getElementById("balance-amount");
+        this.expenseForm = document.getElementById("expense-form");
+        this.expenseInput = document.getElementById("expense-input");
+        this.amountInput = document.getElementById("amount-input");
+        this.expenseList = document.getElementById("expense-list");
+        this.itemList = [];
+        this.itemID = 0;
+      }
+      submitBudgetForm() {
+        const value = this.budgetInput.value;
+        if (value === "" || value < 0) {
+          this.budgetFeedback.classList.add("showItem");
+          this.budgetFeedback.innerHTML = `<p>Values cannot be negative or empty</p>`;
+          const self = this;
+          setTimeout(() => { 
+            self.budgetFeedback.classList.remove("showItem");
+          },4000);
+        } else {
+          this.budgetAmount.textContent = value;
+          this.budgetInput.value = "";
+          this.showBalance();
+        }
+      }
+      showBalance() {
+        const expense = this.totalExpense();
+        const total = parseInt(this.budgetAmount.textContent) - expense;
+        this.balanceAmount.textContent = total;
+        if (total < 0) {
+          this.balance.classList.remove("showGreen", "showBlack");
+          this.balance.classList.add("showRed");
+        } else if (total > 0) {
+          this.balance.classList.remove("showRed", "showBlack");
+          this.balance.classList.add("showGreen");
+        } else if (total === 0) {
+          this.balance.classList.remove("showGreen", "showRed");
+          this.balance.classList.add("showBlack");
+        }
+      }
+      submitExpenseForm() {
+        const expenseValue = this.expenseInput.value;
+        const amountValue = this.amountInput.value;
+        if (expenseValue === "" || amountValue === "" || amountValue < 0) {
+          this.expenseFeedback.classList.add("showItem");
+          this.expenseFeedback.innerHTML = `<p>Values cannot be negative or empty</p>`;
+          const self = this;
+          setTimeout(() => { self.expenseFeedback.classList.remove("showItem"); }, 4000);
+        }
+        else {
+          let amount = parseInt(amountValue);
+          this.expenseInput.value = "";
+          this.amountInput.value = "";
+
+          let expense = {
+            id: this.itemID,
+            title: expenseValue,
+            amount: amount
+          };
+          this.itemID++;
+          this.itemList.push(expense);
+          this.addExpense(expense);
+          this.showBalance();
+        }
+      }
+      addExpense(expense) {
+        const div = document.createElement("div");
+        div.classList.add('expense');
+        div.innerHTML = 
+          `
+          <div class="expense-item d-flex justify-content-between align-items-baseline">
+            <h6 class="expense-title mb-0 text-uppercase list-item">- ${expense.title}</h6>
+            <h5 class="expense-amount mb-0 list-item">${expense.amount}</h5>
+            <div class="expense-icons list-item">
+              <a href="#" class="edit-icon mx-2" data-id="${expense.id}">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="#" class="delete-icon" data-id="${expense.id}">
+                <i class="fas fa-trash"></i>
+              </a>
+            </div>
+          </div>
+          `;
+        this.expenseList.appendChild(div);
+      } 
+      totalExpense() {
+        let total = 0;
+        if (this.itemList.length > 0) {
+          total = this.itemList.reduce((acc, curr) => {
+            acc += curr.amount;
+            return acc;
+          }, 0)
+        }
+        this.expenseAmount.textContent = total;
+        return total;
+      }
+      editExpense(element) {
+        let id = parseInt(element.dataset.id);
+        let parent = element.parentElement.parentElement.parentElement;
+        this.expenseList.removeChild(parent);
+        let expense = this.itemList.filter((item) => { return item.id === id; });
+        this.expenseInput.value = expense[0].title;
+        this.amountInput.value = expense[0].amount;
+        let tempList = this.itemList.filter((item) => { return item.id !== id; });
+        this.itemList = tempList;
+        this.showBalance();
+      }
+      deleteExpense(element) {
+        let id = parseInt(element.dataset.id);
+        let parent = element.parentElement.parentElement.parentElement;
+        this.expenseList.removeChild(parent);
+        let tempList = this.itemList.filter((item) => { return item.id !== id; });
+        this.itemList = tempList;
+        this.showBalance();
+      }
+    }
+
+    function eventListeners() {
+      const budgetForm = document.getElementById("budget-form");
+      const expenseForm = document.getElementById("expense-form");
+      const expenseList = document.getElementById("expense-list");
+
+      const ui = new UI();
+
+      budgetForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        ui.submitBudgetForm();
+      });
+
+      expenseForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        ui.submitExpenseForm();
+      });
+
+      expenseList.addEventListener("click", (event) => {
+        if (event.target.parentElement.classList.contains('edit-icon')) {
+          ui.editExpense(event.target.parentElement);
+        }
+        else if (event.target.parentElement.classList.contains('delete-icon')) {
+          ui.deleteExpense(event.target.parentElement);
+        }
+      });
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      eventListeners();
+    });
+   </script>
+  </body>
+</html>
